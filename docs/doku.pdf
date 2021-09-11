@@ -1,1 +1,2 @@
-A program feladata: kamera felvételen mozgás érzékelése és követése.
+Biztonsagi kamera program:
+  Python-ban irodott otthoni biztonsagi kamera rendszer mozgas erzekelessel es email figyelmeztetessel.
