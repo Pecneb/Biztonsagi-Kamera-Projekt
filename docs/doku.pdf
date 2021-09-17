@@ -1,2 +1,8 @@
-Biztonsagi kamera program:
-  Python-ban irodott otthoni biztonsagi kamera rendszer mozgas erzekelessel es email figyelmeztetessel.
+Biztonsagi kamera:
+  Egy python alapu mozgaserzekelo biztonsagi kamera, email ertesitessel.
+  
+  Reszei:
+    main.py
+    kamera.py
+    face.py
+  
