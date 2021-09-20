@@ -1,7 +1,7 @@
 # Biztonsagi kamera:
 
-  Egy python alapu mozgaserzekelo biztonsagi kamera, email ertesitessel.
-  A program elkeszitesehez a hasznalt konyvtarak:
+Egy python alapu mozgaserzekelo biztonsagi kamera, email ertesitessel.
+A program elkeszitesehez a hasznalt konyvtarak:
     
     - OpenCV-Python
     - Numpy
@@ -10,9 +10,9 @@
     - os
     - sys
   
-  ## Reszei:
+## Reszei:
   
-    - `main.py`
-        - progam main fajlja
-    - `kamera.py`
-        - video vagy kamera megjelenitese
+  - `main.py`
+      - progam main fajlja
+  - `kamera.py`
+      - video vagy kamera megjelenitese
