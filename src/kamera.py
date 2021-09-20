@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 import numpy
 import cv2
 
+'''
+this module gets video srouce as input,
+then shows the kamera or play the video with GUI
+'''
 def kamera(vsrc):
     # getting video source
     cap = cv2.VideoCapture(vsrc)
@@ -31,3 +35,5 @@ def kamera(vsrc):
     cap.release()
     cv2.destroyAllWindows()
 
+if __name__ == "__main__":
+    kamera()
