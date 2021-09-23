@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Biztonsagi kamera:
 
   Egy python alapu mozgaserzekelo biztonsagi kamera, email ertesitessel.
@@ -16,3 +17,25 @@
         - progam main fajlja
     - `kamera.py`
         - video vagy kamera megjelenitese
+=======
+# Biztonsagi kamera:
+
+Egy python alapu mozgaserzekelo biztonsagi kamera, email ertesitessel.
+A program elkeszitesehez a hasznalt konyvtarak:
+
+- OpenCV-Python
+- Numpy
+- Matplotlib.Pyplot
+- Argparse
+- os
+- sys
+
+## Reszei:
+
+- `main.py`
+    - progam main fajlja
+- `kamera.py`
+    - video vagy kamera megjelenitese
+
+## Usage
+>>>>>>> 364789240a00188e94629f0715e865e8070b9476
