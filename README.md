@@ -16,3 +16,5 @@ A program elkeszitesehez a hasznalt konyvtarak:
       - progam main fajlja
   - `kamera.py`
       - video vagy kamera megjelenitese
+  - `bgsub.py`
+      - hatter kivonas, mozgaserzekeles
