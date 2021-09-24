@@ -24,7 +24,7 @@ A program elkeszitesehez a hasznalt konyvtarak:
 ## Usage:
 
 ```
-main.py -h
+python main.py -h
 usage: main.py [-h] [--mode MODE] [--algo ALGO] [video source path]
 
 Security Camera with motion detection.(quit with 'q')
