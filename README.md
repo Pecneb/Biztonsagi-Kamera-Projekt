@@ -23,7 +23,8 @@ A program elkeszitesehez a hasznalt konyvtarak:
 
 ## Usage:
 
-``main.py -h
+```
+main.py -h
 usage: main.py [-h] [--mode MODE] [--algo ALGO] [video source path]
 
 Security Camera with motion detection.(quit with 'q')
@@ -34,4 +35,5 @@ positional arguments:
 optional arguments:
   -h, --help           show this help message and exit
   --mode MODE          Choose: show camera/video (play) or background subtraction (md) mode.
-  --algo ALGO          Choose what background subtractor algo to use: MOG2 or KNN``
+  --algo ALGO          Choose what background subtractor algo to use: MOG2 or KNN
+ ```
