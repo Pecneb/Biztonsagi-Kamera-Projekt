@@ -18,3 +18,5 @@ A program elkeszitesehez a hasznalt konyvtarak:
       - video vagy kamera megjelenitese
   - `bgsub.py`
       - hatter kivonas, mozgaserzekeles
+  - `occipation.py`
+      - Igazat ad vissza, ha mozgas van a felvetelen
