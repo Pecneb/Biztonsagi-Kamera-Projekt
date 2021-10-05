@@ -1,8 +1,9 @@
 # Biztonsagi kamera:
 
-Egy python alapu mozgaserzekelo biztonsagi kamera, email ertesitessel.
-A program elkeszitesehez a hasznalt konyvtarak:
-    
+Security camera with motion detection and tracking.  
+
+Dependencies:
+  - Python 3.9.7
   - OpenCV-Python
   - Numpy
   - Matplotlib.Pyplot
@@ -10,18 +11,20 @@ A program elkeszitesehez a hasznalt konyvtarak:
   - os
   - sys
   
-## Reszei:
+## Modules:
   
   - `main.py`
-      - progam main fajlja
+      - The software can be started with the `main.py` file, that takes additional arguments.  
   - `kamera.py`
-      - video vagy kamera megjelenitese
+      - The module can open videos or live camera feed, with the given source path.
   - `bgsub.py`
-      - hatter kivonas, mozgaserzekeles
+      - This module uses background subtraction to show motion.
   - `occipation.py`
-      - Igazat ad vissza, ha mozgas van a felvetelen
+      - This module helps with detecting motion.
+  - `track_motion.py`
+      - This module tracks the detected motion.
 
-## Usage:
+## User guide:
 
 ```
 python main.py -h
@@ -36,4 +39,5 @@ optional arguments:
   -h, --help           show this help message and exit
   --mode MODE          Choose: show camera/video (play) or background subtraction (md) mode.
   --algo ALGO          Choose what background subtractor algo to use: MOG2 or KNN
- ```
+
+```
