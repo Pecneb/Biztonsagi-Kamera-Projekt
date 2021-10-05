@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 from oqqupation import is_oqqupied
+from track_motion import track_motion
 
 GREEN = [0,255,0]
 RED = [0,0,255]
@@ -27,9 +28,15 @@ def bgsub(vsrc, algo):
         
         fgMask = backSub.apply(frame, learningRate=-1)
         bgIm = backSub.getBackgroundImage()
-        
+        # blurring mask image, to decrease noice
+        fgMask = cv.GaussianBlur(fgMask,(21,21), 0)
+
         if is_oqqupied(fgMask, 1):
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)
+            # applying the motion tracker module
+            x,y,w,h = track_motion(frame, fgMask)
+            # drawing border around detected motion
+            border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
         else:
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
 
