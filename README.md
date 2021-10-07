@@ -23,21 +23,21 @@ Dependencies:
       - This module helps with detecting motion.
   - `track_motion.py`
       - This module tracks the detected motion.
+  - `track_motion2.py`
+      - Implements motion tracking another way.
 
 ## User guide:
 
 ```
-python main.py -h
-usage: main.py [-h] [--mode MODE] [--algo ALGO] [video source path]
+usage: main.py [-h] [--input INPUT] [--bsAlgo BSALGO] [--sensAlgo SENSALGO]
 
 Security Camera with motion detection.(quit with 'q')
 
-positional arguments:
-  [video source path]  path to the video source (0 to use webcam).
-
 optional arguments:
   -h, --help           show this help message and exit
-  --mode MODE          Choose: show camera/video (play) or background subtraction (md) mode.
-  --algo ALGO          Choose what background subtractor algo to use: MOG2 or KNN
+  --input INPUT        path to the video source (webcam is default).
+  --bsAlgo BSALGO      Choose the background subtraction algorythm MOG2 or KKN
+  --sensAlgo SENSALGO  Choose what type of motion detection to use: tm or tm2. tm is for less populated areas, tm2 is
+                       more stable
 
 ```
