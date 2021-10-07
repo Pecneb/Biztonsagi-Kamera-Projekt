@@ -11,24 +11,36 @@ def main():
     # Using argparser to get command line arguments
     parser = argparse.ArgumentParser(description="Security Camera with motion detection.(quit with 'q')")
     # vsrc is an argument, the user should give in the command line, no matter what!
-    parser.add_argument('vsrc', metavar='[video source path]', help='path to the video source (0 to use webcam).')
+    parser.add_argument('--input', help='path to the video source (webcam is default).', default=0)
     # mode: kamera or background subtraction
-    parser.add_argument('--mode', help='Choose: show camera/video (play) or background subtraction (md) mode.', default='cam')
+    parser.add_argument('--bsAlgo', help='Choose the background subtraction algorythm MOG2 or KKN', default='MOG2')
     # choose algo for background subtraction
-    parser.add_argument('--algo', help='Choose what background subtractor algo to use: MOG2 or KNN', default='MOG2')
+    parser.add_argument('--sensAlgo', help='Choose what type of motion detection to use: tm or tm2. tm is for less populated areas, tm2 is more stable', default='tm2')
     # parse args
     args = parser.parse_args()
     
-    if args.mode == 'play':
-        if args.vsrc == '0':
-            kamera((int)(args.vsrc))
+    if args.input == 0:
+        if args.bsAlgo == 'KKN':
+            if args.sensAlgo == 'tm':
+                bgsub(0, 'KKN', 'tm')
+            else:
+                bgsub(0, 'KKN', 'tm2')
         else:
-            kamera(args.vsrc)
-    elif args.mode == 'md':
-        if args.vsrc == '0':
-            bgsub((int)(args.vsrc), args.algo)
+            if args.sensAlgo == 'tm':
+                bgsub(0, 'MOG2', 'tm')
+            else:
+                bgsub(0, 'MOG2', 'tm2')
+    elif args.input != 0:
+        if args.bsAlgo == 'KKN':
+            if args.sensAlgo == 'tm':
+                bgsub(args.input, 'KKN', 'tm')
+            else:
+                bgsub(args.input, 'KKN', 'tm2')
         else:
-            bgsub(args.vsrc, args.algo)
+            if args.sensAlgo == 'tm':
+                bgsub(args.input, 'MOG2', 'tm')
+            else:
+                bgsub(args.input, 'MOG2', 'tm2')
 
 if __name__=="__main__":
     main()
