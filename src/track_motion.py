@@ -1,4 +1,6 @@
+from typing import Annotated
 import cv2 as cv
+from find_anomaly import find_anomaly
 
 def track_motion(frame, mask):
     '''
@@ -6,8 +8,9 @@ def track_motion(frame, mask):
     Frame is a frame from a video src.
     The mask is the area of a motion on the video frame.
     From these information, the module will track the object on the screen.
+    And it will return the position of the sensed motion.
+    x,y coordinates with w=width, h=height
     '''
-    
     # initialize location of tracking window
     x, y, w, h = 300, 200, 200, 120
     track_window = (x, y, w, h)
