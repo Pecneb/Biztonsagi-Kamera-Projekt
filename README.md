@@ -22,9 +22,9 @@ Dependencies:
   - `occipation.py`
       - This module helps with detecting motion.
   - `track_motion.py`
-      - This module tracks the detected motion.
+      - Tracks motion, using CamShift algorythm.
   - `track_motion2.py`
-      - Implements motion tracking another way.
+      - Tracks motion using contour detection.
 
 ## User guide:
 
