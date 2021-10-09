@@ -35,26 +35,26 @@ def bgsub(vsrc, bgAlgo, sensAlgo):
         
         # apply background subtrcation algorythm on frame
         fgMask = backSub.apply(frame, learningRate=-1)
-        # try to remove shadows with threshholding
-        ret, fgMask = cv.threshold(fgMask, 128, 255, cv.THRESH_BINARY)
-        # this is the background image, we dont really use it, but if we need it, its there
-        bgIm = backSub.getBackgroundImage()
-        # blurring mask image, to decrease noice, with Gaussian Blur
-        fgMask = cv.GaussianBlur(fgMask,(9,9), 0)
-        # fgMask = cv.dilate(fgMask, None,  iterations=3)
+
         # check if there is any motion in the frame
         if is_oqqupied(fgMask, 1):
+
             # if theres any motion, draw green border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)
+
             if sensAlgo == 'tm':
+
                 # applying the motion tracker module
                 x,y,w,h = track_motion(frame, fgMask)
+
                 # drawing border around detected motion
                 border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
             if sensAlgo == 'tm2':
+
                 # apply canny algorythm
-                track_motion2(border, fgMask)
+                fgMask = track_motion2(border, fgMask)
         else:
+
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
 
@@ -64,6 +64,7 @@ def bgsub(vsrc, bgAlgo, sensAlgo):
         #             cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
         
         # edges = cv.Canny(fgMask, 127, 255)
+
         # show frames with imshow
         # cv.imshow('Canny', edges)
         cv.imshow('Frame', border)

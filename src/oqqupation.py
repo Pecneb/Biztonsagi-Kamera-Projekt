@@ -13,8 +13,10 @@ def is_oqqupied(frame, threshold):
         the smaller the number, the smaller motion can be detected. 
     '''
     # img = cv.imread('./Back_Projection_Theory0.jpg')
+    
     #calculate histogram of the image
     hist = cv.calcHist([frame], [0], None, [2], [0,256])
+    
     # plt.figure()
     # plt.title("Hist")
     # plt.xlabel("Bins")
@@ -22,9 +24,12 @@ def is_oqqupied(frame, threshold):
     # plt.plot(hist)
     # plt.xlim([0,256])
     # plt.show()
+    
     summa = sum(hist[:,0])
+    
     # print(hist[1])
     # print(f"Over 50: {oth0} \t Under 50: {uth1} And {summa}")
+    
     if (hist[1]/summa)*10000 > threshold:
         return True
     return False

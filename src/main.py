@@ -20,23 +20,30 @@ def main():
     args = parser.parse_args()
     
     if args.input == 0:
+        
         if args.bsAlgo == 'KKN':
+        
             if args.sensAlgo == 'tm':
                 bgsub(0, 'KKN', 'tm')
             else:
                 bgsub(0, 'KKN', 'tm2')
         else:
+        
             if args.sensAlgo == 'tm':
                 bgsub(0, 'MOG2', 'tm')
             else:
                 bgsub(0, 'MOG2', 'tm2')
+    
     elif args.input != 0:
+        
         if args.bsAlgo == 'KKN':
+    
             if args.sensAlgo == 'tm':
                 bgsub(args.input, 'KKN', 'tm')
             else:
                 bgsub(args.input, 'KKN', 'tm2')
         else:
+    
             if args.sensAlgo == 'tm':
                 bgsub(args.input, 'MOG2', 'tm')
             else:

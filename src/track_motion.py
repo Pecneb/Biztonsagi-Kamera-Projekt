@@ -29,6 +29,7 @@ def track_motion(frame, mask):
     # it gives back the tracking window parameters
     ret, track_window = cv.CamShift(dst, track_window, term_crit)
     x, y, w, h = track_window
+    
     return x,y,w,h
 
 
