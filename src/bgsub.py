@@ -16,9 +16,9 @@ Background subtraction module
 def bgsub(vsrc, bgAlgo, sensAlgo):
     # choose what algorythm to use: MOG2 or KKN
     if bgAlgo == 'MOG2':
-        backSub = cv.createBackgroundSubtractorMOG2()
+        backSub = cv.createBackgroundSubtractorMOG2(varThreshold=8, history=200)
     else:
-        backSub = cv.createBackgroundSubtractorKNN()
+        backSub = cv.createBackgroundSubtractorKNN(history=100)
     
     # get video from vsrc
     capture = cv.VideoCapture(vsrc)
