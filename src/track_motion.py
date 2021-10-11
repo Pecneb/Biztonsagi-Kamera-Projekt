@@ -1,6 +1,5 @@
 from typing import Annotated
 import cv2 as cv
-from find_anomaly import find_anomaly
 
 def track_motion(frame, mask):
     '''
