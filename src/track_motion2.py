@@ -13,22 +13,24 @@ def track_motion2(frame, mask):
     blur = cv.GaussianBlur(mask, (9,9), 0)
     
     # Remove false positives, with threshold
-    _, thresh = cv.threshold(blur, 200, 255, cv.THRESH_BINARY)
+    _, thresh = cv.threshold(blur, 160, 255, cv.THRESH_BINARY)
     
     # Enhance moving object
-    dilate = cv.dilate(thresh, None, iterations=3)
+    dilate = cv.dilate(thresh, None, iterations=2)
+    morph = cv.morphologyEx(thresh, cv.MORPH_OPEN, None, iterations=2)
+    morph = cv.morphologyEx(morph, cv.MORPH_CLOSE, None, iterations=2)
     
     # Find objects with contour detection
-    contours, hierarchy = cv.findContours(dilate, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    # ret_img = cv.drawContours(frame, ret_img, -1, (0,0,255), 1)
+    contours, hierarchy = cv.findContours(morph, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    # cv.drawContours(frame, contours, -1, 255, 2)
 
     # Iterate through objects, and draw rectangle around them
     for contour in contours:
         # get rectangle position
         (x,y,w,h) = cv.boundingRect(contour)
-    
+
         # reduce motion noice
-        if cv.contourArea(contour) > 300:
+        if cv.contourArea(contour) > 350:
             # print contour area sizes for debug purposes
             print(cv.contourArea(contour))
 
@@ -36,4 +38,4 @@ def track_motion2(frame, mask):
             cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
 
     # return finale mask image for debug purposes
-    return dilate
+    return morph
