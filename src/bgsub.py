@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from oqqupation import is_oqqupied
 from track_motion import track_motion
-from find_anomaly import find_anomaly
 from track_motion2 import track_motion2
 
 GREEN = [0,255,0]
@@ -14,7 +13,7 @@ RED = [0,0,255]
 Background subtraction module
 '''
 def bgsub(vsrc, bgAlgo, sensAlgo):
-    # choose what algorythm to use: MOG2 or KKN
+    # choose what algorythm to use: MOG2 or KNN
     if bgAlgo == 'MOG2':
         backSub = cv.createBackgroundSubtractorMOG2(varThreshold=8)
     else:
