@@ -16,9 +16,9 @@ Background subtraction module
 def bgsub(vsrc, bgAlgo, sensAlgo):
     # choose what algorythm to use: MOG2 or KKN
     if bgAlgo == 'MOG2':
-        backSub = cv.createBackgroundSubtractorMOG2(varThreshold=8, history=200)
+        backSub = cv.createBackgroundSubtractorMOG2(varThreshold=8)
     else:
-        backSub = cv.createBackgroundSubtractorKNN(history=100)
+        backSub = cv.createBackgroundSubtractorKNN()
     
     # get video from vsrc
     capture = cv.VideoCapture(vsrc)
@@ -37,7 +37,7 @@ def bgsub(vsrc, bgAlgo, sensAlgo):
         fgMask = backSub.apply(frame, learningRate=-1)
 
         # check if there is any motion in the frame
-        if is_oqqupied(fgMask, 1):
+        if is_oqqupied(fgMask, 10):
 
             # if theres any motion, draw green border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)
@@ -51,7 +51,7 @@ def bgsub(vsrc, bgAlgo, sensAlgo):
                 border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
             if sensAlgo == 'tm2':
 
-                # apply canny algorythm
+                # contour finding algorythm
                 fgMask = track_motion2(border, fgMask)
         else:
 
