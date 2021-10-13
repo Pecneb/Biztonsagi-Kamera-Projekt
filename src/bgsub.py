@@ -12,9 +12,9 @@ RED = [0,0,255]
 '''
 Background subtraction module
 '''
-def bgsub(vsrc, bgAlgo, sensAlgo):
+def bgsub(vsrc, bsAlgo, sensAlgo):
     # choose what algorythm to use: MOG2 or KNN
-    if bgAlgo == 'MOG2':
+    if bsAlgo == 'MOG2':
         backSub = cv.createBackgroundSubtractorMOG2(varThreshold=8)
     else:
         backSub = cv.createBackgroundSubtractorKNN()
@@ -62,10 +62,7 @@ def bgsub(vsrc, bgAlgo, sensAlgo):
         # cv.putText(frame, str(capture.get(cv.CAP_PROP_POS_FRAMES)), (15, 15),
         #             cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
         
-        # edges = cv.Canny(fgMask, 127, 255)
-
         # show frames with imshow
-        # cv.imshow('Canny', edges)
         cv.imshow('Frame', border)
         cv.imshow('FG Mask', fgMask)
         

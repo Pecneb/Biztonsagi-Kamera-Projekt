@@ -1,11 +1,6 @@
 # import sys
 # import os
 import argparse
-from typing import Optional
-import cv2 as cv
-import numpy
-import matplotlib.pyplot as plt
-from kamera import kamera
 from bgsub import bgsub
 
 def main():
