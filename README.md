@@ -10,6 +10,10 @@ Dependencies:
   - Argparse
   - os
   - sys
+
+### Installing dependencies
+
+Use ```pip install -r requirements.txt```
   
 ## Modules:
   
