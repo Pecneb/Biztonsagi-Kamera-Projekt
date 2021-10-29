@@ -2,8 +2,8 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 from oqqupation import is_oqqupied
-from track_motion import track_motion
-from track_motion2 import track_motion2
+from camshift import track_motion
+from track_object import track_motion2
 
 GREEN = [0,255,0]
 RED = [0,0,255]
@@ -15,7 +15,7 @@ Background subtraction module
 def bgsub(vsrc, bsAlgo, sensAlgo):
     # choose what algorythm to use: MOG2 or KNN
     if bsAlgo == 'MOG2':
-        backSub = cv.createBackgroundSubtractorMOG2(varThreshold=8)
+        backSub = cv.createBackgroundSubtractorMOG2(varThreshold=40)
     else:
         backSub = cv.createBackgroundSubtractorKNN()
     
@@ -25,6 +25,12 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
     if not capture.isOpened():
         print('Unable to open: ' + vsrc)
         exit(0)
+
+    # define object array updaterate and framecount
+    objectHistograms = []
+    OBJUPDATERATE = 100
+    framecount = 0
+
     # play video by frame by frame
     while True:
         # read frame from capture obj
@@ -51,7 +57,7 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
             if sensAlgo == 'tm2':
 
                 # contour finding algorythm
-                fgMask = track_motion2(border, fgMask)
+                fgMask, objectHistograms = track_motion2(border, fgMask, OBJUPDATERATE, framecount, objectHistograms=objectHistograms)
         else:
 
             # if theres no motion, draw red border around the frame
@@ -65,7 +71,8 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
         # show frames with imshow
         cv.imshow('Frame', border)
         cv.imshow('FG Mask', fgMask)
-        
+        # increment framecount
+        framecount += 1
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
             break
