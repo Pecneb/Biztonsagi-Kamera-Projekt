@@ -4,11 +4,11 @@ import cv2 as cv
 
 '''
 this module gets video srouce as input,
-then shows the kamera or play the video with GUI
+then shows the kamera or play the video
 '''
-def kamera(vsrc):
+def kamera():
     # getting video source
-    cap = cv.VideoCapture(vsrc)
+    cap = cv.VideoCapture(0)
     
     # generating warning message if couldnt open video
     if not cap.isOpened():
