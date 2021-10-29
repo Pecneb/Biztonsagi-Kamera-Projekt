@@ -19,29 +19,34 @@ def histOfObjects(objects = []) :
 
     return objHists
 
-def updateObjects(updaterate, framecount, objectHistograms = [], updatedHistograms = []):
+def updateObjects(objectHistograms = [], updatedHistograms = []):
     '''
-    Update obj array depending on updaterate and framcount.
-    If the same obj hist is found on frame, then update obj position.
+    Update objects.
     '''
-    if (framecount%updaterate)==0:
-        for oh in range(len(objectHistograms)):
-            # compare histograms, to find best match
-            bestMatch = 0.00
-            iofhist = oh
-            for uh in range(len(updatedHistograms)):
-                if uh <= oh:
-                    match = cv.compareHist(objectHistograms[oh][0], updatedHistograms[uh][0], 1)
-                    if bestMatch > match:
-                        bestMatch = match
-                        iofhist = uh
-                else:
-                    objectHistograms.append(updatedHistograms[uh])
-            print(bestMatch)
-            if bestMatch != 0.0:
-                objectHistograms.remove(objectHistograms[oh])
-            
+    retArr = []
+    for i in range(len(objectHistograms)):
+        match = 0.0
+        found = i
+        for j in range(len(updatedHistograms)):
+            match = cv.compareHist(objectHistograms[i][0], updatedHistograms[j][0], 2)
+            found = j
+            if match == 0.0:
+                retArr.append(i)
+                break
+        if match != 0.0:
+            if found > i:
+                retArr.append(updatedHistograms[found])
+    if len(objectHistograms) == 0:
+        retArr = updatedHistograms
+    return retArr
         
+def listObjects(objects = []):
+    '''
+    List found objects, only for debug.
+    '''
+    for o in objects:
+        print(o[1])
+
 def camshiftOnObjects(frame, objectHistograms=[]):
     term_crit = ( cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 10, 1 )
     hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
@@ -50,9 +55,9 @@ def camshiftOnObjects(frame, objectHistograms=[]):
         dst = cv.calcBackProject([hsv], [0], obj[0], [0,180], 1)
         ret, track_window = cv.CamShift(dst, track_window, term_crit)
         x,y,w,h = track_window
-        cv.rectangle(frame, (x,y), (x+w, y+h), 255, 2)
+        cv.circle(frame, (int(x+(w/2)), int(y+(h/2))), 5, 255, 2)
 
-def track_motion2(frame, mask, updaterate, framecount, objectHistograms = []):
+def track_motion2(frame, mask, vectors = []):
     '''
     Frame is the original frame of the captured video.
     Mask is the mask from the backgoundsubtraction. 
@@ -88,19 +93,16 @@ def track_motion2(frame, mask, updaterate, framecount, objectHistograms = []):
             
             # get obj and obj position from frame and add to newObject arr
             obj = frame[y:y+h, x:x+w]
-            newObjects.append([obj, (x,y,w,h)])
+            # newObjects.append([obj, (x,y,w,h)])
+            vectors.append([x,y,w,h])
 
             # draw rectangle on original frame
             cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
-
-    # calculate the histograms of the given objects
-    # newObjectHistograms = histOfObjects(newObjects)
+            cv.circle(frame, (int(x+(w/2)), int(y+(h/2))), 5, 255, 2)
     
-    # camshiftOnObjects(frame, objectHistograms)
+    # draw vectors on frame
+    for v in vectors:
+        cv.circle(frame, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, 255, 5)
 
-    # objectHistograms = newObjectHistograms
-
-    # updateObjects(framecount, updaterate, objectHistograms, newObjectHistograms)
-    
     # return finale mask image for debug purposes
-    return morph, objectHistograms
+    return morph, vectors

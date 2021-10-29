@@ -28,8 +28,7 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
 
     # define object array updaterate and framecount
     objectHistograms = []
-    OBJUPDATERATE = 100
-    framecount = 0
+    vectors = []
 
     # play video by frame by frame
     while True:
@@ -57,7 +56,7 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
             if sensAlgo == 'tm2':
 
                 # contour finding algorythm
-                fgMask, objectHistograms = track_motion2(border, fgMask, OBJUPDATERATE, framecount, objectHistograms=objectHistograms)
+                fgMask, objectHistograms = track_motion2(border, fgMask, vectors=vectors)
         else:
 
             # if theres no motion, draw red border around the frame
@@ -71,8 +70,7 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
         # show frames with imshow
         cv.imshow('Frame', border)
         cv.imshow('FG Mask', fgMask)
-        # increment framecount
-        framecount += 1
+        
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
             break
