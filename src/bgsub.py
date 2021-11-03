@@ -8,11 +8,14 @@ from track_object import track_motion2
 GREEN = [0,255,0]
 RED = [0,0,255]
 
-
-'''
-Background subtraction module
-'''
 def bgsub(vsrc, bsAlgo, sensAlgo):
+    '''
+    Object motion sensing with Backgroundsubtraction.
+    bgsub(vsrc, bsAlgo, sensAlgo)
+    vsrc = video source
+    bsAlgo = background subtraction algorythm
+    sensAlgo = sensing motion with camshift or finding contours
+    '''
     # choose what algorythm to use: MOG2 or KNN
     if bsAlgo == 'MOG2':
         backSub = cv.createBackgroundSubtractorMOG2(varThreshold=40)
@@ -21,14 +24,13 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
     
     # get video from vsrc
     capture = cv.VideoCapture(vsrc)
+    
     # check if video can be opened
     if not capture.isOpened():
         print('Unable to open: ' + vsrc)
         exit(0)
 
-    # define object array updaterate and framecount
-    objectHistograms = []
-    vectors = []
+    vmask = None
 
     # play video by frame by frame
     while True:
@@ -36,29 +38,29 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
         ret, frame = capture.read()
         if frame is None:
             break
-        
+
         # apply background subtrcation algorythm on frame
         fgMask = backSub.apply(frame, learningRate=-1)
 
         # check if there is any motion in the frame
         if is_oqqupied(fgMask, 10):
-
             # if theres any motion, draw green border around the frame
-            border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)
+            border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
+            if vmask is None:
+                vmask = np.zeros(border.shape, dtype=np.uint8)
 
             if sensAlgo == 'tm':
-
                 # applying the motion tracker module
                 x,y,w,h = track_motion(frame, fgMask)
 
                 # drawing border around detected motion
                 border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
             if sensAlgo == 'tm2':
-
                 # contour finding algorythm
-                fgMask, objectHistograms = track_motion2(border, fgMask, vectors=vectors)
+                fgMask, vmask = track_motion2(border, fgMask, vmask)
+                vectors = cv.add(border, vmask)
+                cv.imshow('Drawn vectors',vectors)
         else:
-
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
 
@@ -68,8 +70,8 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
         #             cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
         
         # show frames with imshow
-        cv.imshow('Frame', border)
-        cv.imshow('FG Mask', fgMask)
+        cv.imshow('Original Frame', border)
+        cv.imshow('Foreground mask', fgMask)
         
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
