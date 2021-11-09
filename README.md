@@ -31,16 +31,16 @@ Use ```pip install -r requirements.txt```
 ## User guide:
 
 ```
-usage: main.py [-h] [--input INPUT] [--bsAlgo {KNN,MOG2}] [--sensAlgo {camshift,contour}]
+
+python.exe .\src\main.py --help
+usage: main.py [-h] [--input INPUT] [--algo {KNN,MOG2}]
 
 Security Camera with motion detection.(quit with 'q')
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --input INPUT         path to the video source (webcam is default).
-  --bsAlgo {KNN,MOG2}   Choose the background subtraction algorythm MOG2 or KNN
-  --sensAlgo {camshift,contour}
-                        Choose what type of motion detection to use: camshift or contour. Contour detection can track multiple objects
+  -h, --help         show this help message and exit
+  --input INPUT      path to the video source (webcam is default).
+  --algo {KNN,MOG2}  Choose the background subtraction algorythm MOG2 or KNN
 
 ```
 
