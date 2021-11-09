@@ -9,9 +9,9 @@ def main():
     # vsrc is an argument, the user should give in the command line, no matter what!
     parser.add_argument('--input', help='path to the video source (webcam is default).', default=0)
     # mode: kamera or background subtraction
-    parser.add_argument('--bsAlgo', help='Choose the background subtraction algorythm MOG2 or KNN', default='MOG2', choices=['KNN', 'MOG2'])
+    parser.add_argument('--algo', help='Choose the background subtraction algorythm MOG2 or KNN', default='MOG2', choices=['KNN', 'MOG2'])
     # choose algo for background subtraction
-    parser.add_argument('--sensAlgo', help='Choose what type of motion detection to use: camshift or contour. Contour detection can track multiple objects', default='tm2', choices=['camshift', 'contour'])
+    # parser.add_argument('--sensAlgo', help='Choose what type of motion detection to use: camshift or contour. Contour detection can track multiple objects', default='tm2', choices=['camshift', 'contour'])
     # parse args
     args = parser.parse_args()
     

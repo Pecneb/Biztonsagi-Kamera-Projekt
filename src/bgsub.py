@@ -8,16 +8,15 @@ from track_object import track_motion2
 GREEN = [0,255,0]
 RED = [0,0,255]
 
-def bgsub(vsrc, bsAlgo, sensAlgo):
+def bgsub(vsrc, algo):
     '''
     Object motion sensing with Backgroundsubtraction.
-    bgsub(vsrc, bsAlgo, sensAlgo)
+    bgsub(vsrc, algo)
     vsrc = video source
-    bsAlgo = background subtraction algorythm
-    sensAlgo = sensing motion with camshift or finding contours
+    algo = background subtraction algorythm
     '''
     # choose what algorythm to use: MOG2 or KNN
-    if bsAlgo == 'MOG2':
+    if algo == 'MOG2':
         backSub = cv.createBackgroundSubtractorMOG2(varThreshold=40)
     else:
         backSub = cv.createBackgroundSubtractorKNN()
@@ -49,17 +48,18 @@ def bgsub(vsrc, bsAlgo, sensAlgo):
             if vmask is None:
                 vmask = np.zeros(border.shape, dtype=np.uint8)
 
-            if sensAlgo == 'tm':
-                # applying the motion tracker module
-                x,y,w,h = track_motion(frame, fgMask)
+            # if sensAlgo == 'tm':
+            #     # applying the motion tracker module
+            #     x,y,w,h = track_motion(frame, fgMask)
 
-                # drawing border around detected motion
-                border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
-            if sensAlgo == 'tm2':
-                # contour finding algorythm
-                fgMask, vmask = track_motion2(border, fgMask, vmask)
-                vectors = cv.add(border, vmask)
-                cv.imshow('Drawn vectors',vectors)
+            #     # drawing border around detected motion
+            #     border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
+            # if sensAlgo == 'tm2':
+            
+            # contour finding algorythm
+            fgMask, vmask = track_motion2(border, fgMask, vmask)
+            vectors = cv.add(border, vmask)
+            cv.imshow('Drawn vectors',vectors)
         else:
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
