@@ -15,35 +15,22 @@ def main():
     # parse args
     args = parser.parse_args()
     
+    # Use webcam as video source
     if args.input == 0:
-        
-        if args.bsAlgo == 'KNN':
-        
-            if args.sensAlgo == 'contour':
-                bgsub(0, 'KNN', 'tm')
-            else:
-                bgsub(0, 'KNN', 'tm2')
-        elif args.bsAlgo == 'MOG2':
-        
-            if args.sensAlgo == 'contour':
-                bgsub(0, 'MOG2', 'tm')
-            else:
-                bgsub(0, 'MOG2', 'tm2')
-    
+        # Using KNN algorythm for background subtraction
+        if args.algo == 'KNN':
+            bgsub(0, 'KNN')
+        # Using MOG2 algorythm for background subtraction
+        elif args.algo == 'MOG2':
+            bgsub(0, 'MOG2')
+    # Specify video source
     elif args.input != 0:
-        
-        if args.bsAlgo == 'KNN':
-    
-            if args.sensAlgo == 'contour':
-                bgsub(args.input, 'KNN', 'tm')
-            else:
-                bgsub(args.input, 'KNN', 'tm2')
-        elif args.bsAlgo == 'MOG2':
-    
-            if args.sensAlgo == 'contour':
-                bgsub(args.input, 'MOG2', 'tm')
-            else:
-                bgsub(args.input, 'MOG2', 'tm2')
+        # Using KNN algorythm for background subtraction
+        if args.algo == 'KNN':
+            bgsub(args.input, 'KNN')
+        # Using MOG2 algorythm for background subtraction
+        elif args.algo == 'MOG2':
+            bgsub(args.input, 'MOG2')
 
 if __name__=="__main__":
     main()

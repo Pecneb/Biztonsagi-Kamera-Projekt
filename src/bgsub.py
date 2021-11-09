@@ -45,17 +45,10 @@ def bgsub(vsrc, algo):
         if is_oqqupied(fgMask, 10):
             # if theres any motion, draw green border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
+
             if vmask is None:
                 vmask = np.zeros(border.shape, dtype=np.uint8)
 
-            # if sensAlgo == 'tm':
-            #     # applying the motion tracker module
-            #     x,y,w,h = track_motion(frame, fgMask)
-
-            #     # drawing border around detected motion
-            #     border = cv.rectangle(border, (x, y), (x+w, y+h), 255, 2)
-            # if sensAlgo == 'tm2':
-            
             # contour finding algorythm
             fgMask, vmask = track_motion2(border, fgMask, vmask)
             vectors = cv.add(border, vmask)
