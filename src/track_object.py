@@ -19,7 +19,7 @@ def histOfObjects(objects = []) :
 
     return objHists
 
-def track_motion2(frame, mask, vmask):
+def track_motion2(frame, mask):
     '''
     Frame is the original frame of the captured video.  
     Mask is the mask from the backgoundsubtraction. 
@@ -41,7 +41,7 @@ def track_motion2(frame, mask, vmask):
     # cv.drawContours(mask, contours, -1, (0,255,0), 50, hierarchy=hierarchy, maxLevel=1)
 
     # Save objects coordinates int his array
-    vectors = []
+    # vectors = []
 
     # Iterate through objects, and draw rectangle around them
     for contour in contours:
@@ -49,26 +49,23 @@ def track_motion2(frame, mask, vmask):
         (x,y,w,h) = cv.boundingRect(contour)
 
         # filter out noice
-        if cv.contourArea(contour) > 300:
-            # print contour area sizes for debug purposes
-            # print(cv.contourArea(contour))
-            
+        if cv.contourArea(contour) > 300:          
             # get obj and obj position from frame and add to newObject arr
             # obj = frame[y:y+h, x:x+w]
             # newObjects.append([obj, (x,y,w,h)])
-            vectors.append([x,y,w,h])
+            # vectors.append([x,y,w,h])
 
             # draw rectangle on original frame
             cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
             # cv.circle(frame, (int(x+(w/2)), int(y+(h/2))), 5, 255, 2)
 
     # print out detected moving objects for debug purpouses
-    print(len(vectors))
+    # print(len(vectors))
 
     # draw vectors on frame
-    for v in vectors:
-        cv.circle(vmask, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, 255, 5)
+    # for v in vectors:
+    #     cv.circle(vmask, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, 255, 5)
 
 
     # return finale mask image for debug purposes
-    return dilate, vmask
+    return dilate #, vmask
