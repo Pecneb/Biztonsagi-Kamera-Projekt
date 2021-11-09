@@ -67,7 +67,7 @@ def track_motion2(frame, mask, vmask):
 
     # draw vectors on frame
     for v in vectors:
-        cv.circle(vmask, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, 255, 5)
+        cv.circle(vmask, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, (0,255,0), 5)
 
 
     # return finale mask image for debug purposes
