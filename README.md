@@ -21,7 +21,7 @@ Use ```pip install -r requirements.txt```
       - The software can be started with the `main.py` file, that takes additional arguments.
   - `bgsub.py`
       - This module uses background subtraction to show motion.
-  - `occipation.py`
+  - `occupation.py`
       - This module helps with detecting motion.
   - `track_motion.py`
       - Tracks motion, using CamShift algorythm.
