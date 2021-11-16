@@ -23,10 +23,12 @@ Use ```pip install -r requirements.txt```
       - This module uses background subtraction to show motion.
   - `occupation.py`
       - This module helps with detecting motion.
-  - `track_motion.py`
-      - Tracks motion, using CamShift algorythm.
-  - `track_motion2.py`
-      - Tracks motion using contour detection.
+  - `track_object.py`
+      - Module for motion detection and motion tracking
+  - `rec.py`
+      - Easy to use video recording module with user guide.
+  - `optical_flow.py`
+      - Just an optical flow testing script, for later use.
 
 ## User guide:
 
