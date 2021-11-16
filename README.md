@@ -2,6 +2,8 @@
 
 Security camera with motion detection and tracking.  
 
+Tested on ParrotOS/Linux and Windows10
+
 Dependencies:
   - Python 3.9.7
   - OpenCV-Python
