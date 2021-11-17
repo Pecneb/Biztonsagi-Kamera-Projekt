@@ -75,6 +75,7 @@ def bgsub(vsrc, algo):
             # convert frame to gray
             frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
+            # ensuring opencv wont crash, calcOpticalFlow only when there are points to track
             if p0 is not None:
                 # calculate optical flow
                 p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
@@ -88,7 +89,7 @@ def bgsub(vsrc, algo):
                 for i,(new,old) in enumerate(zip(good_new, good_old)):
                     a,b = new.ravel()
                     c,d = old.ravel()
-                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 2)
+                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 4)
                     frame = cv.circle(frame, (int(a),int(b)), 5, color[i].tolist(), -1)
 
                 # Now update the previous frame and previous points
