@@ -64,36 +64,38 @@ def bgsub(vsrc, algo):
             # if theres any motion, draw green border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
 
+            # contour finding algorythm
+            fgMask = track_motion2(border, fgMask)
+
             # find corners on first frame
             old_frame = frame
             old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
-            p0 = cv.goodFeaturesToTrack(old_gray, mask = None, **feature_params)
+            p0 = cv.goodFeaturesToTrack(old_gray, mask = fgMask, **feature_params)
 
             # convert frame to gray
             frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
-            # calculate optical flow
-            p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
+            if p0 is not None:
+                # calculate optical flow
+                p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
             
-            # Select good points
-            if p1 is not None:
-                good_new = p1[st==1]
-                good_old = p0[st==1]
+                # Select good points
+                if p1 is not None:
+                    good_new = p1[st==1]
+                    good_old = p0[st==1]
 
-            # draw vectors
-            for i,(new,old) in enumerate(zip(good_new, good_old)):
-                a,b = new.ravel()
-                c,d = old.ravel()
-                mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 2)
-                frame = cv.circle(frame, (int(a),int(b)), 5, color[i].tolist(), -1)
+                # draw vectors
+                for i,(new,old) in enumerate(zip(good_new, good_old)):
+                    a,b = new.ravel()
+                    c,d = old.ravel()
+                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 2)
+                    frame = cv.circle(frame, (int(a),int(b)), 5, color[i].tolist(), -1)
 
-            # if vmask is None:
-            #     vmask = np.zeros(border.shape, dtype=np.uint8)
-
-            # contour finding algorythm
-            fgMask = track_motion2(border, fgMask)
-            # vectors = cv.add(border, vmask)
-            # cv.imshow('Drawn vectors',vectors)
+                # Now update the previous frame and previous points
+                old_gray = frame_gray.copy()
+                p0 = good_new.reshape(-1,1,2)
+            
+            
         else:
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
