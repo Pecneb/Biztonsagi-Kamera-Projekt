@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="biztonsagi-kamera">Biztonsagi kamera:</h1>
+<p>Security camera with motion detection and tracking.</p>
+<p>Tested on ParrotOS/Linux and Windows10</p>
+<p>Dependencies:</p>
+<ul>
+<li>Python 3.9.7</li>
+<li>OpenCV-Python</li>
+<li>Numpy</li>
+<li>Matplotlib.Pyplot</li>
+<li>Argparse</li>
+<li>os</li>
+<li>sys</li>
+</ul>
+<h3 id="installing-dependencies">Installing dependencies</h3>
+<p>Use <code>pip install -r requirements.txt</code></p>
+<h2 id="modules">Modules:</h2>
+<ul>
+<li><code>main.py</code>
+<ul>
+<li>The software can be started with the <code>main.py</code> file, that takes additional arguments.</li>
+</ul>
+</li>
+<li><code>bgsub.py</code>
+<ul>
+<li>This module uses background subtraction to show motion.</li>
+</ul>
+</li>
+<li><code>occupation.py</code>
+<ul>
+<li>This module helps with detecting motion.</li>
+</ul>
+</li>
+<li><code>track_object.py</code>
+<ul>
+<li>Module for motion detection and motion tracking</li>
+</ul>
+</li>
+<li><code>rec.py</code>
+<ul>
+<li>Easy to use video recording module with user guide.</li>
+</ul>
+</li>
+<li><code>optical_flow.py</code>
+<ul>
+<li>Just an optical flow testing script, for later use.</li>
+</ul>
+</li>
+</ul>
+<h2 id="user-guide">User guide:</h2>
+<pre class="hljs"><code><div>
+python.exe .\src\main.py --help
+usage: main.py [-h] [--input INPUT] [--algo {KNN,MOG2}]
+
+Security Camera with motion detection.(quit with 'q')
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --input INPUT      path to the video source (webcam is default).
+  --algo {KNN,MOG2}  Choose the background subtraction algorythm MOG2 or KNN
+
+</div></code></pre>
+<h2 id="mainpy"><code>main.py</code></h2>
+<p>This is the user interface of the program. The user can specify the video source input,<br>
+the algorithm of the background subtraction and the type of the motion detecting.<br>
+And the library i have used for this, is <code>argparse</code>.</p>
+<h2 id="bgsubpy"><code>bgsub.py</code></h2>
+<p>This is the brain of the program. The <code>main.py</code> module calls <code>bgsub.py</code> to start the whole<br>
+process.<br>
+<code>bgsub.py</code> takes 3 agruments <code>bgsub(vsrc, bsAlgo, sensAlgo)</code>. <code>vsrc</code> is the path to the video file<br>
+or the number of the camera. <code>bsAlgo</code> is the backgroundsubtraction algorythm, it can be MOG2 or KNN.
+<code>sensAlgo</code> is the type of motion detecting, Camshift can be used for detecing a predefined<br>
+ROI (range of interest). This technique is not fully implemented yet. The other type of motion  detecting is with finding the contours of objects moving on the video. This technique i find more effective for stationary security cameras.</p>
+<h3 id="using-the-backgroundsubtractor-classes">Using the Backgroundsubtractor classes:</h3>
+<pre class="hljs"><code><div>
+backSub = cv.createBackgroundSubtractorMOG2() <span class="hljs-comment"># for MOG2</span>
+
+backSub = cv.createBackgroundSubtractorKNN() <span class="hljs-comment"># for KNN</span>
+
+fgMask = backSub.apply(frame, learningRate=<span class="hljs-number">-1</span>) <span class="hljs-comment"># obtain forground mask of video stream</span>
+
+</div></code></pre>
+<p>These constructors can take various arguments for fine tune your background subtraction quality.<br>
+But they do the job witouth any arguments aswell.<br>
+<code>backSub.apply(frame, learningRate=-1)</code><br>
+frame: is a frame from the video
+learningRate: specify the learning rate of background model (0 - 1), -1 is for automatically chosen<br>
+learning rate</p>
+<h3 id="videocapture">VideoCapture</h3>
+<pre class="hljs"><code><div>
+capture = cv.VideoCapture(vsrc) <span class="hljs-comment"># get stream from source</span>
+ret, frame = capture.read() <span class="hljs-comment"># obtain frame from video stream</span>
+cv.imshow(<span class="hljs-string">'VideoFrame'</span>, frame) <span class="hljs-comment"># show the frame obtained from the videostream</span>
+
+</div></code></pre>
+<h2 id="occupationpy"><code>occupation.py</code></h2>
+<p>The purpose of this module, to make sure if theres any major object moving in the frame,<br>
+for example: animals, humans, bicycles, cars, etc...<br>
+This way we dont have to appy any contour detecion algorythm, so we can save precious resources.<br>
+<code>is_occupied(frame, threshold)</code><br>
+Frame: the input image, this should be a foreground mask<br>
+Threshold: with this argument, we can adjust the sensitivity of the detection in range 0 - 10000.<br>
+the smaller the number, the smaller motion can be detected.</p>
+<pre class="hljs"><code><div>
+hist = cv.calcHist([frame], [<span class="hljs-number">0</span>], <span class="hljs-literal">None</span>, [<span class="hljs-number">2</span>], [<span class="hljs-number">0</span>,<span class="hljs-number">256</span>]) <span class="hljs-comment"># calculating the histogram of the binary image</span>
+
+summa = sum(hist[:,<span class="hljs-number">0</span>]) <span class="hljs-comment"># sum of the pixel intensity</span>
+
+<span class="hljs-keyword">if</span> (hist[<span class="hljs-number">1</span>]/summa)*<span class="hljs-number">10000</span> &gt; threshold:
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+<span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+</div></code></pre>
+<p>In this code example, we calculate the histogram of the forground mask.<br>
+And if there is enought white pixels in the mask (this we can adjust with the threshold argument)<br>
+the function returns True.</p>
+
+</body>
+</html>
