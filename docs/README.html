@@ -433,10 +433,7 @@ And the library i have used for this, is <code>argparse</code>.</p>
 <h2 id="bgsubpy"><code>bgsub.py</code></h2>
 <p>This is the brain of the program. The <code>main.py</code> module calls <code>bgsub.py</code> to start the whole<br>
 process.<br>
-<code>bgsub.py</code> takes 3 agruments <code>bgsub(vsrc, bsAlgo, sensAlgo)</code>. <code>vsrc</code> is the path to the video file<br>
-or the number of the camera. <code>bsAlgo</code> is the backgroundsubtraction algorythm, it can be MOG2 or KNN.
-<code>sensAlgo</code> is the type of motion detecting, Camshift can be used for detecing a predefined<br>
-ROI (range of interest). This technique is not fully implemented yet. The other type of motion  detecting is with finding the contours of objects moving on the video. This technique i find more effective for stationary security cameras.</p>
+<code>bgsub.py</code> takes agruments <code>bgsub(vsrc, algo)</code>. <code>vsrc</code> is the path to the video file or the camera. <code>algo</code> is the backgroundsubtraction algorythm, it can be MOG2 or KNN.</p>
 <h3 id="using-the-backgroundsubtractor-classes">Using the Backgroundsubtractor classes:</h3>
 <pre class="hljs"><code><div>
 backSub = cv.createBackgroundSubtractorMOG2() <span class="hljs-comment"># for MOG2</span>
@@ -458,6 +455,69 @@ capture = cv.VideoCapture(vsrc) <span class="hljs-comment"># get stream from sou
 ret, frame = capture.read() <span class="hljs-comment"># obtain frame from video stream</span>
 cv.imshow(<span class="hljs-string">'VideoFrame'</span>, frame) <span class="hljs-comment"># show the frame obtained from the videostream</span>
 
+</div></code></pre>
+<h3 id="optical-flow">Optical Flow</h3>
+<p>For motion tracking, i used the Optical Flow algorithm with Lukas Kanade method.<br>
+Optical flow is the pattern of apparent motion of image objects<br>
+between two consecutive frames caused by the movement of object or camera.<br>
+It is 2D vector field where each vector is a displacement vector<br>
+showing the movement of points from first frame to second.<br>
+Lucas-Kanade method takes a 3x3 patch around the point.<br>
+So all the 9 points have the same motion.<br>
+So now our problem becomes solving 9 equations with two unknown variables which is  over-determined.<br>
+A better solution is obtained with least square fit method.</p>
+<p>To decide which points to track, we use cv.goodFeaturesToTrack().<br>
+We take the first frame, detect some Shi-Tomasi corner points in it,<br>
+then we iteratively track those points using Lucas-Kanade optical flow.</p>
+<h4 id="parameter-to-pass-for-shi-tomasi-corner-detection-and-lucas-kanade-optical-flow">Parameter to pass for Shi-Tomasi corner detection and Lucas Kanade optical flow</h4>
+<pre class="hljs"><code><div>    <span class="hljs-comment"># params for ShiTomasi corner detection</span>
+    feature_params = dict( maxCorners = <span class="hljs-number">100</span>,
+                           qualityLevel = <span class="hljs-number">0.3</span>,
+                           minDistance = <span class="hljs-number">7</span>,
+                           blockSize = <span class="hljs-number">7</span> )
+    
+    <span class="hljs-comment"># params for lucas kanade optical flow</span>
+    lk_params = dict( winSize = (<span class="hljs-number">15</span>,<span class="hljs-number">15</span>),
+                      maxLevel = <span class="hljs-number">2</span>,
+                      criteria = (cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, <span class="hljs-number">10</span>, <span class="hljs-number">0.03</span>))
+</div></code></pre>
+<h4 id="implementing-optical-flow">Implementing Optical Flow</h4>
+<p>For the algorith, we must pass an old frame and the next frame.<br>
+On these frames we must find the points to track.<br>
+Then the algorithm compares the points on the old frame<br>
+and the next frame. Every point found has a status number,<br>
+saved in a vector <code>st</code>. If the point on the old frame found<br>
+on the next frame, the point's status set to 1, otherwise 0.<br>
+With this <code>st</code> vector, we can see which points can we draw.<br>
+At the end we update the old frame, and the points.</p>
+<pre class="hljs"><code><div>            <span class="hljs-comment"># find corners on first frame</span>
+            old_frame = frame
+            old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
+            p0 = cv.goodFeaturesToTrack(old_gray, mask = fgMask, **feature_params)
+
+            <span class="hljs-comment"># convert frame to gray</span>
+            frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+            <span class="hljs-comment"># ensuring opencv wont crash, calcOpticalFlow only when there are points to track</span>
+            <span class="hljs-keyword">if</span> p0 <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+                <span class="hljs-comment"># calculate optical flow</span>
+                p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, <span class="hljs-literal">None</span>, **lk_params)
+            
+                <span class="hljs-comment"># Select good points</span>
+                <span class="hljs-keyword">if</span> p1 <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+                    good_new = p1[st==<span class="hljs-number">1</span>]
+                    good_old = p0[st==<span class="hljs-number">1</span>]
+
+                <span class="hljs-comment"># draw vectors</span>
+                <span class="hljs-keyword">for</span> i,(new,old) <span class="hljs-keyword">in</span> enumerate(zip(good_new, good_old)):
+                    a,b = new.ravel()
+                    c,d = old.ravel()
+                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), <span class="hljs-number">4</span>)
+                    frame = cv.circle(frame, (int(a),int(b)), <span class="hljs-number">5</span>, color[i].tolist(), <span class="hljs-number">-1</span>)
+
+                <span class="hljs-comment"># Now update the previous frame and previous points</span>
+                old_gray = frame_gray.copy()
+                p0 = good_new.reshape(<span class="hljs-number">-1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)
 </div></code></pre>
 <h2 id="occupationpy"><code>occupation.py</code></h2>
 <p>The purpose of this module, to make sure if theres any major object moving in the frame,<br>
