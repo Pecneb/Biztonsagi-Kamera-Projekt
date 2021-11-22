@@ -53,16 +53,6 @@ def track_motion2(frame, mask):
             cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
             
     # print out detected moving objects for debug purpouses
-<<<<<<< HEAD
-    print(len(vectors))
-
-    # draw vectors on frame
-    for v in vectors:
-        cv.circle(vmask, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, (0,255,0), 5)
-
-
-=======
     # print(len(vectors))
->>>>>>> optical_flow_obj_tracking
     # return finale mask image for debug purposes
     return dilate
