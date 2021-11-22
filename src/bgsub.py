@@ -29,7 +29,25 @@ def bgsub(vsrc, algo):
         print('Unable to open: ' + vsrc)
         exit(0)
 
-    vmask = None
+    # vmask = None
+
+    # params for ShoTomasi corner detection
+    feature_params = dict( maxCorners = 100,
+                           qualityLevel = 0.3,
+                           minDistance = 7,
+                           blockSize = 7 )
+    
+    # params for lucas kanade optical flow
+    lk_params = dict( winSize = (15,15),
+                      maxLevel = 2,
+                      criteria = (cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 10, 0.03))
+
+    # create random colors
+    color = np.random.randint(0, 255, (100,3))
+
+    # mask image for drawing the vectors
+    ret, frame_for_copy = capture.read()
+    mask = np.zeros_like(cv.copyMakeBorder(frame_for_copy, 10,10,10,10,cv.BORDER_CONSTANT, value=RED))
 
     # play video by frame by frame
     while True:
@@ -46,13 +64,39 @@ def bgsub(vsrc, algo):
             # if theres any motion, draw green border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
 
-            if vmask is None:
-                vmask = np.zeros(border.shape, dtype=np.uint8)
-
             # contour finding algorythm
-            fgMask, vmask = track_motion2(border, fgMask, vmask)
-            vectors = cv.add(border, vmask)
-            cv.imshow('Drawn vectors',vectors)
+            fgMask = track_motion2(border, fgMask)
+
+            # find corners on first frame
+            old_frame = frame
+            old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
+            p0 = cv.goodFeaturesToTrack(old_gray, mask = fgMask, **feature_params)
+
+            # convert frame to gray
+            frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+            # ensuring opencv wont crash, calcOpticalFlow only when there are points to track
+            if p0 is not None:
+                # calculate optical flow
+                p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
+            
+                # Select good points
+                if p1 is not None:
+                    good_new = p1[st==1]
+                    good_old = p0[st==1]
+
+                # draw vectors
+                for i,(new,old) in enumerate(zip(good_new, good_old)):
+                    a,b = new.ravel()
+                    c,d = old.ravel()
+                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 4)
+                    frame = cv.circle(frame, (int(a),int(b)), 5, color[i].tolist(), -1)
+
+                # Now update the previous frame and previous points
+                old_gray = frame_gray.copy()
+                p0 = good_new.reshape(-1,1,2)
+            
+            
         else:
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
@@ -63,8 +107,10 @@ def bgsub(vsrc, algo):
         #             cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
         
         # show frames with imshow
-        cv.imshow('Original Frame', border)
-        cv.imshow('Foreground mask', fgMask)
+        # making output image
+        output = cv.add(border, mask)
+        cv.imshow('Output', output)
+        cv.imshow('Mask', fgMask)
         
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):

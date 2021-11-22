@@ -1,5 +1,7 @@
 from typing import Match
 import cv2 as cv
+import numpy as np
+from numpy.core.fromnumeric import ndim
 
 '''
 In this module, i will implement motion tracking with contour detection and contour drawing.
@@ -19,7 +21,7 @@ def histOfObjects(objects = []) :
 
     return objHists
 
-def track_motion2(frame, mask, vmask):
+def track_motion2(frame, mask):
     '''
     Frame is the original frame of the captured video.  
     Mask is the mask from the backgoundsubtraction. 
@@ -32,16 +34,13 @@ def track_motion2(frame, mask, vmask):
     _, thresh = cv.threshold(blur, 127, 255, cv.THRESH_BINARY)
 
     # Enhance moving object
-    open = cv.morphologyEx(thresh, cv.MORPH_OPEN, None, iterations=2)
+    open = cv.morphologyEx(thresh, cv.MORPH_OPEN, None, iterations=3)
     close = cv.morphologyEx(open, cv.MORPH_CLOSE, None, iterations=6)
-    dilate = cv.dilate(close, None, iterations=4)
+    dilate = cv.dilate(close, None, iterations=3)
 
     # Find objects with contour detection
     contours, hierarchy = cv.findContours(dilate, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     # cv.drawContours(mask, contours, -1, (0,255,0), 50, hierarchy=hierarchy, maxLevel=1)
-
-    # Save objects coordinates int his array
-    vectors = []
 
     # Iterate through objects, and draw rectangle around them
     for contour in contours:
@@ -49,20 +48,12 @@ def track_motion2(frame, mask, vmask):
         (x,y,w,h) = cv.boundingRect(contour)
 
         # filter out noice
-        if cv.contourArea(contour) > 300:
-            # print contour area sizes for debug purposes
-            # print(cv.contourArea(contour))
-            
-            # get obj and obj position from frame and add to newObject arr
-            # obj = frame[y:y+h, x:x+w]
-            # newObjects.append([obj, (x,y,w,h)])
-            vectors.append([x,y,w,h])
-
+        if cv.contourArea(contour) > 300:          
             # draw rectangle on original frame
             cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
-            # cv.circle(frame, (int(x+(w/2)), int(y+(h/2))), 5, 255, 2)
-
+            
     # print out detected moving objects for debug purpouses
+<<<<<<< HEAD
     print(len(vectors))
 
     # draw vectors on frame
@@ -70,5 +61,8 @@ def track_motion2(frame, mask, vmask):
         cv.circle(vmask, (int(v[0]+(v[2]/2)), int(v[1]+(v[3]/2))), 1, (0,255,0), 5)
 
 
+=======
+    # print(len(vectors))
+>>>>>>> optical_flow_obj_tracking
     # return finale mask image for debug purposes
-    return dilate, vmask
+    return dilate
