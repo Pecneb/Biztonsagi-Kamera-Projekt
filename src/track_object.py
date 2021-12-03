@@ -28,10 +28,10 @@ def track_motion2(frame, mask):
     '''
 
     # Remove noice
-    blur = cv.GaussianBlur(mask, (9,9), 0)
+    blur = cv.GaussianBlur(mask, (5,5), 0)
 
     # Remove false positives, with threshold
-    _, thresh = cv.threshold(blur, 127, 255, cv.THRESH_BINARY)
+    _, thresh = cv.threshold(blur, 80, 255, cv.THRESH_BINARY)
 
     # Enhance moving object
     open = cv.morphologyEx(thresh, cv.MORPH_OPEN, None, iterations=3)
@@ -52,7 +52,5 @@ def track_motion2(frame, mask):
             # draw rectangle on original frame
             cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
             
-    # print out detected moving objects for debug purpouses
-    # print(len(vectors))
-    # return finale mask image for debug purposes
+        # return finale mask image for debug purposes
     return dilate

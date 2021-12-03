@@ -5,7 +5,7 @@ from bgsub import bgsub
 
 def main():
     # Using argparser to get command line arguments
-    parser = argparse.ArgumentParser(description="Security Camera with motion detection.(quit with 'q')")
+    parser = argparse.ArgumentParser(description="Security Camera with motion detection.(quit with 'q', press 'q' to pause and resume)")
     # vsrc is an argument, the user should give in the command line, no matter what!
     parser.add_argument('--input', help='path to the video source (webcam is default).', default=0)
     # mode: kamera or background subtraction

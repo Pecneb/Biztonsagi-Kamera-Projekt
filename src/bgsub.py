@@ -58,7 +58,8 @@ def bgsub(vsrc, algo):
 
         # apply background subtrcation algorythm on frame
         fgMask = backSub.apply(frame, learningRate=-1)
-
+        cv.imshow("Unprocessed FG", fgMask)
+        
         # check if there is any motion in the frame
         if is_oqqupied(fgMask, 10):
             # if theres any motion, draw green border around the frame
@@ -89,7 +90,7 @@ def bgsub(vsrc, algo):
                 for i,(new,old) in enumerate(zip(good_new, good_old)):
                     a,b = new.ravel()
                     c,d = old.ravel()
-                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 4)
+                    mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 2)
                     frame = cv.circle(frame, (int(a),int(b)), 5, color[i].tolist(), -1)
 
                 # Now update the previous frame and previous points
@@ -101,10 +102,10 @@ def bgsub(vsrc, algo):
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
 
-
-        # cv.rectangle(frame, (10, 2), (100,20), (255,255,255), -1)
-        # cv.putText(frame, str(capture.get(cv.CAP_PROP_POS_FRAMES)), (15, 15),
-        #             cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
+        # Print frame number on frame
+        cv.rectangle(border, (10, 2), (100,20), (255,255,255), -1)
+        cv.putText(border, str(capture.get(cv.CAP_PROP_POS_FRAMES)), (15, 15),
+                    cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
         
         # show frames with imshow
         # making output image
@@ -115,6 +116,9 @@ def bgsub(vsrc, algo):
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
             break
+        if cv.waitKey(1) == ord('p'):
+            if cv.waitKey(0) == ord('p'):
+                continue
 
 if __name__ == '__main__':
     bgsub(0, 'MOG2')
