@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from oqqupation import is_oqqupied
 from camshift import track_motion
 from track_object import track_motion2
+from scipy.spatial.distance import euclidean
 
 GREEN = [0,255,0]
 RED = [0,0,255]
@@ -49,16 +50,24 @@ def bgsub(vsrc, algo):
     ret, frame_for_copy = capture.read()
     mask = np.zeros_like(cv.copyMakeBorder(frame_for_copy, 10,10,10,10,cv.BORDER_CONSTANT, value=RED))
 
-    # store object center koordinates
+    # store the eucledian distance of the tracking methods, frame by frame
+    euclideanDistancesOverall = []
+    euclideanDistances = []
+    averageDist = []
+
+    # store the center koordinates of objects on a frame
     centerKoord = np.empty((0,2))
-    # store opticalflow corner koordinates
-    cornerKoord = np.empty((0,2))
 
     # play video by frame by frame
     while True:
         # read frame from capture obj
         ret, frame = capture.read()
         if frame is None:
+            # print out average distances and plot a histogram of them
+            print(f"Eucledian distances:\n{averageDist}")
+            plt.figure()
+            plt.hist(averageDist,histtype='stepfilled')
+            plt.show()
             break
 
         # apply background subtrcation algorythm on frame
@@ -71,7 +80,7 @@ def bgsub(vsrc, algo):
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
 
             # contour finding algorythm
-            fgMask, centerKoord = track_motion2(border, fgMask, centerKoord)
+            fgMask, centerKoord = track_motion2(border, fgMask)
 
             # find corners on first frame
             old_frame = frame
@@ -83,8 +92,15 @@ def bgsub(vsrc, algo):
 
             # ensuring opencv wont crash, calcOpticalFlow only when there are points to track
             if p0 is not None:
-                # store koords
-                cornerKoord = np.append(cornerKoord, p0[:,0,:], axis=0)
+                # calculate the distances, then calculate the average and store it
+                cornerKoord = p0[:,0,:]
+                for centk in centerKoord:
+                    for cornk in cornerKoord:
+                        dist = round(euclidean(centk, cornk))
+                        euclideanDistances.append(dist)
+
+                euclideanDistancesOverall.append(euclideanDistances)
+                averageDist.append(round(sum(euclideanDistances)/len(euclideanDistances), 0))
 
                 # calculate optical flow
                 p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
@@ -123,8 +139,11 @@ def bgsub(vsrc, algo):
         
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
-            print(f"Center koordinates:\n {centerKoord}")
-            print(f"Optical flow corner koordinates:\n {cornerKoord}")
+            # print out average distances and plot a histogram of them
+            print(f"Eucledian distances:\n{averageDist}")
+            plt.figure()
+            plt.hist(averageDist, histtype='stepfilled')
+            plt.show()
             break
         if cv.waitKey(1) == ord('p'):
             if cv.waitKey(0) == ord('p'):

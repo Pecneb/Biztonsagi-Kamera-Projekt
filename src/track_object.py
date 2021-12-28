@@ -21,7 +21,7 @@ def histOfObjects(objects = []) :
 
     return objHists
 
-def track_motion2(frame, mask, koords):
+def track_motion2(frame, mask):
     '''
     Frame is the original frame of the captured video.  
     Mask is the mask from the backgoundsubtraction. 
@@ -42,7 +42,7 @@ def track_motion2(frame, mask, koords):
     contours, hierarchy = cv.findContours(dilate, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     # cv.drawContours(mask, contours, -1, (0,255,0), 50, hierarchy=hierarchy, maxLevel=1)
 
-    newKoords = koords
+    newKoords = np.empty((0,2))
 
     # Iterate through objects, and draw rectangle around them
     for contour in contours:
