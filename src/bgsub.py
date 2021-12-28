@@ -49,6 +49,11 @@ def bgsub(vsrc, algo):
     ret, frame_for_copy = capture.read()
     mask = np.zeros_like(cv.copyMakeBorder(frame_for_copy, 10,10,10,10,cv.BORDER_CONSTANT, value=RED))
 
+    # store object center koordinates
+    centerKoord = np.empty((0,2))
+    # store opticalflow corner koordinates
+    cornerKoord = np.empty((0,2))
+
     # play video by frame by frame
     while True:
         # read frame from capture obj
@@ -66,7 +71,7 @@ def bgsub(vsrc, algo):
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
 
             # contour finding algorythm
-            fgMask = track_motion2(border, fgMask)
+            fgMask, centerKoord = track_motion2(border, fgMask, centerKoord)
 
             # find corners on first frame
             old_frame = frame
@@ -78,6 +83,9 @@ def bgsub(vsrc, algo):
 
             # ensuring opencv wont crash, calcOpticalFlow only when there are points to track
             if p0 is not None:
+                # store koords
+                cornerKoord = np.append(cornerKoord, p0[:,0,:], axis=0)
+
                 # calculate optical flow
                 p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
             
@@ -115,6 +123,8 @@ def bgsub(vsrc, algo):
         
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
+            print(f"Center koordinates:\n {centerKoord}")
+            print(f"Optical flow corner koordinates:\n {cornerKoord}")
             break
         if cv.waitKey(1) == ord('p'):
             if cv.waitKey(0) == ord('p'):
