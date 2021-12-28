@@ -153,3 +153,7 @@ return False
 
 In this code example, we calculate the histogram of the forground mask. And if there is enought white pixels in the mask (this we can adjust with the threshold argument) the function returns True.
 
+## Euclidean distance experiment
+
+At last i experimented with calculating the euclidean distance of the Shi-Thomasi corner koordinates and the center koordinates of objects. For every frame i calculated the distances of every center point and every corner point, then took the average, stored it and plotted it as a histogram. With this, i wanted to demonstrate how my own implementation of object trajectory tracking (taking the center koordinates of objects) compared to the optical flow alorithm (tracking corner point koordinates of objects).
+
