@@ -100,7 +100,8 @@ def bgsub(vsrc, algo):
                         euclideanDistances.append(dist)
 
                 euclideanDistancesOverall.append(euclideanDistances)
-                averageDist.append(round(sum(euclideanDistances)/len(euclideanDistances), 0))
+                if len(euclideanDistances) != 0:
+                    averageDist.append(round(sum(euclideanDistances)/len(euclideanDistances), 4))
 
                 # calculate optical flow
                 p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
