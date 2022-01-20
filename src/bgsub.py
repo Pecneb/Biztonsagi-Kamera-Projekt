@@ -67,6 +67,8 @@ def bgsub(vsrc, algo):
             print(f"Eucledian distances:\n{averageDist}")
             plt.figure()
             plt.hist(averageDist,histtype='stepfilled')
+            plt.figure()
+            plt.hist(euclideanDistancesOverall)
             plt.show()
             break
 
@@ -144,6 +146,8 @@ def bgsub(vsrc, algo):
             print(f"Eucledian distances:\n{averageDist}")
             plt.figure()
             plt.hist(averageDist, histtype='stepfilled')
+            plt.figure()
+            plt.hist(euclideanDistancesOverall)
             plt.show()
             break
         if cv.waitKey(1) == ord('p'):
