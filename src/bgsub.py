@@ -1,10 +1,7 @@
 import cv2 as cv
 import numpy as np
-from matplotlib import pyplot as plt
 from oqqupation import is_oqqupied
-from camshift import track_motion
 from track_object import track_motion2
-from scipy.spatial.distance import euclidean
 
 GREEN = [0,255,0]
 RED = [0,0,255]
@@ -50,31 +47,16 @@ def bgsub(vsrc, algo):
     ret, frame_for_copy = capture.read()
     mask = np.zeros_like(cv.copyMakeBorder(frame_for_copy, 10,10,10,10,cv.BORDER_CONSTANT, value=RED))
 
-    # store the eucledian distance of the tracking methods, frame by frame
-    euclideanDistancesOverall = []
-    euclideanDistances = []
-    averageDist = []
-
-    # store the center koordinates of objects on a frame
-    centerKoord = np.empty((0,2))
-
     # play video by frame by frame
     while True:
         # read frame from capture obj
         ret, frame = capture.read()
         if frame is None:
-            # print out average distances and plot a histogram of them
-            print(f"Eucledian distances:\n{averageDist}")
-            plt.figure()
-            plt.hist(averageDist,histtype='stepfilled')
-            plt.figure()
-            plt.hist(euclideanDistancesOverall)
-            plt.show()
             break
 
         # apply background subtrcation algorythm on frame
         fgMask = backSub.apply(frame, learningRate=-1)
-        cv.imshow("Unprocessed FG", fgMask)
+        # cv.imshow("Unprocessed FG", fgMask)
         
         # check if there is any motion in the frame
         if is_oqqupied(fgMask, 10):
@@ -94,17 +76,6 @@ def bgsub(vsrc, algo):
 
             # ensuring opencv wont crash, calcOpticalFlow only when there are points to track
             if p0 is not None:
-                # calculate the distances, then calculate the average and store it
-                cornerKoord = p0[:,0,:]
-                for centk in centerKoord:
-                    for cornk in cornerKoord:
-                        dist = round(euclidean(centk, cornk))
-                        euclideanDistances.append(dist)
-
-                euclideanDistancesOverall.append(euclideanDistances)
-                if len(euclideanDistances) != 0:
-                    averageDist.append(round(sum(euclideanDistances)/len(euclideanDistances), 4))
-
                 # calculate optical flow
                 p1, st, err = cv.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
             
@@ -128,11 +99,6 @@ def bgsub(vsrc, algo):
         else:
             # if theres no motion, draw red border around the frame
             border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=RED)
-
-        # Print frame number on frame
-        cv.rectangle(border, (10, 2), (100,20), (255,255,255), -1)
-        cv.putText(border, str(capture.get(cv.CAP_PROP_POS_FRAMES)), (15, 15),
-                    cv.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
         
         # show frames with imshow
         # making output image
@@ -142,13 +108,6 @@ def bgsub(vsrc, algo):
         
         # waiting for exit key, which in this case is 'Q'
         if cv.waitKey(1) == ord('q'):
-            # print out average distances and plot a histogram of them
-            print(f"Eucledian distances:\n{averageDist}")
-            plt.figure()
-            plt.hist(averageDist, histtype='stepfilled')
-            plt.figure()
-            plt.hist(euclideanDistancesOverall)
-            plt.show()
             break
         if cv.waitKey(1) == ord('p'):
             if cv.waitKey(0) == ord('p'):
