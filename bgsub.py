@@ -89,7 +89,7 @@ def bgsub(vsrc, algo):
                     a,b = new.ravel()
                     c,d = old.ravel()
                     mask = cv.line(mask, (int(a),int(b)), (int(c),int(d)), color[i].tolist(), 2)
-                    frame = cv.circle(frame, (int(a),int(b)), 5, color[i].tolist(), -1)
+                    border = cv.circle(border, (int(a),int(b)), 5, color[i].tolist(), -1)
 
                 # Now update the previous frame and previous points
                 old_gray = frame_gray.copy()
