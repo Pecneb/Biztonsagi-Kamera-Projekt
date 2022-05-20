@@ -4,9 +4,9 @@ import darknet
 import argparse
 import os
 
-CONFIG = "../darknet_cfg/yolov3.cfg"
-DATA = "../darknet_cfg/coco.data"
-WEIGHTS = "../darknet_cfg/yolov3.weights"
+CONFIG = "./darknet_cfg/yolov3.cfg"
+DATA = "./darknet_cfg/coco.data"
+WEIGHTS = "./darknet_cfg/yolov3.weights"
 
 network, class_names, colors = darknet.load_network(CONFIG, DATA, WEIGHTS)
 darknet_width = darknet.network_width(network)
@@ -41,7 +41,12 @@ def main():
     parser.add_argument('--input', help='path to video to test with')
     args = parser.parse_args()
 
-    video = cv.VideoCapture(args.input)
+    try:
+        videopath = int(args.input)
+    except ValueError:
+        videopath = args.input
+
+    video = cv.VideoCapture(videopath)
 
     if not video.isOpened():
         print("Unable to open video.")
