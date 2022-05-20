@@ -6,13 +6,17 @@ from track_object import track_motion2
 GREEN = [0,255,0]
 RED = [0,0,255]
 
-def bgsub(vsrc, algo):
+def bgsub(vsrc, algo, darknet_switch):
     '''
     Object motion sensing with Backgroundsubtraction.
     bgsub(vsrc, algo)
     vsrc = video source
     algo = background subtraction algorythm
     '''
+
+    if darknet_switch == 1:
+        import darknet_test
+
     # choose what algorythm to use: MOG2 or KNN
     if algo == 'MOG2':
         backSub = cv.createBackgroundSubtractorMOG2(varThreshold=40)
@@ -60,11 +64,16 @@ def bgsub(vsrc, algo):
         
         # check if there is any motion in the frame
         if is_oqqupied(fgMask, 10):
-            # if theres any motion, draw green border around the frame
-            border = cv.copyMakeBorder(frame, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
+            # decide what detection method to use to use
+            if darknet_switch == 1:
+                # apply darknet YOLO object detection
+                object_detections = darknet_test.detections2cvimg(frame)
+            else:
+                # contour finding algorythm
+                object_detections, fgMask = track_motion2(frame, fgMask)
 
-            # contour finding algorythm
-            fgMask, centerKoord = track_motion2(border, fgMask)
+            # if theres any motion, draw green border around the frame
+            border = cv.copyMakeBorder(object_detections, 10,10,10,10,cv.BORDER_CONSTANT, value=GREEN)            
 
             # find corners on first frame
             old_frame = frame

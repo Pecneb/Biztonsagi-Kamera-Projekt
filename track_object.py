@@ -52,10 +52,10 @@ def track_motion2(frame, mask):
         # filter out noice
         if cv.contourArea(contour) > 300:          
             # draw rectangle on original frame
-            cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
-            centerX = (x+(w//2))
-            centerY = (y+(h//2))
-            newKoords = np.append(newKoords, [[centerX, centerY]], axis=0)
+            frame = cv.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
+            # centerX = (x+(w//2))
+            # centerY = (y+(h//2))
+            # newKoords = np.append(newKoords, [[centerX, centerY]], axis=0)
             
         # return finale mask image for debug purposes
-    return dilate, newKoords
+    return frame, dilate #, newKoords
