@@ -36,6 +36,34 @@ def convert2original(image, bbox):
 
     return bbox_converted
 
+def detections2cvimg(image):
+    '''
+    image: cv2 image 
+    returns: cv2 image with detections drawn on input image
+    '''
+    # Convert frame color from BGR to RGB
+    image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+    # Resize image for darknet
+    image_resized = cv.resize(image_rgb, (darknet_width, darknet_height), interpolation=cv.INTER_LINEAR)
+    # Create darknet image
+    img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
+    # Convert cv2 image to darknet image format
+    darknet.copy_image_from_bytes(img_for_detect, image_resized.tobytes())
+    # Load image into nn and get detections
+    detections = darknet.detect_image(network, class_names, img_for_detect)
+    darknet.free_image(img_for_detect)
+    # Resize bounding boxes for original frame
+    detections_adjusted = []
+    for label, confidence, bbox in detections:
+        bbox_adjusted = convert2original(image, bbox)
+        detections_adjusted.append((str(label), confidence, bbox_adjusted))        
+    # Draw bboxes on frame
+    image_to_return = darknet.draw_boxes(detections_adjusted, image, colors)
+    # Print detections and their confidence percentage
+    darknet.print_detections(detections)
+    return image_to_return
+
+
 def main():
     parser = argparse.ArgumentParser(description="Just a quick test script for YOLO darknet.")
     parser.add_argument('--input', help='path to video to test with')
@@ -51,29 +79,15 @@ def main():
     if not video.isOpened():
         print("Unable to open video.")
         exit(0)
-    
-    
 
     while(True):
         ret, frame = video.read()
         if frame is None:
             break
         
-        frame_rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-        frame_resized = cv.resize(frame_rgb, (darknet_width, darknet_height), interpolation=cv.INTER_LINEAR)
-        img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
-        darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
-
-        detections = darknet.detect_image(network, class_names, img_for_detect)
-        detections_adjusted = []
-        for label, confidence, bbox in detections:
-            bbox_adjusted = convert2original(frame, bbox)
-            detections_adjusted.append((str(label), confidence, bbox_adjusted))        
-        frame2show = darknet.draw_boxes(detections_adjusted, frame, colors)
-        darknet.print_detections(detections)
+        frame2show = detections2cvimg(frame)
         cv.imshow('Video frame', frame2show)
 
-        darknet.free_image(img_for_detect)
         if cv.waitKey(1) == ord('q'):
             break
 
