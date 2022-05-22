@@ -15,7 +15,7 @@ def bgsub(vsrc, algo, darknet_switch):
     '''
 
     if darknet_switch == 1:
-        import darknet_test
+        import hldnapi
 
     # choose what algorythm to use: MOG2 or KNN
     if algo == 'MOG2':
@@ -67,7 +67,7 @@ def bgsub(vsrc, algo, darknet_switch):
             # decide what detection method to use to use
             if darknet_switch == 1:
                 # apply darknet YOLO object detection
-                object_detections = darknet_test.detections2cvimg(frame)
+                object_detections, detections_data = hldnapi.detections2cvimg(frame)
             else:
                 # contour finding algorythm
                 object_detections, fgMask = track_motion2(frame, fgMask)

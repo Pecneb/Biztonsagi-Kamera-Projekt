@@ -40,6 +40,7 @@ def detections2cvimg(image):
     '''
     image: cv2 image 
     returns: cv2 image with detections drawn on input image
+    detections: confidence etc.
     '''
     # Convert frame color from BGR to RGB
     image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
@@ -61,8 +62,7 @@ def detections2cvimg(image):
     image_to_return = darknet.draw_boxes(detections_adjusted, image, colors)
     # Print detections and their confidence percentage
     darknet.print_detections(detections)
-    return image_to_return
-
+    return image_to_return, detections
 
 def main():
     parser = argparse.ArgumentParser(description="Just a quick test script for YOLO darknet.")
