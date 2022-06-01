@@ -4,9 +4,9 @@ import darknet
 import argparse
 import os
 
-CONFIG = "./darknet_cfg/yolov3.cfg"
+CONFIG = "./darknet_cfg/yolov4-tiny.cfg"
 DATA = "./darknet_cfg/coco.data"
-WEIGHTS = "./darknet_cfg/yolov3.weights"
+WEIGHTS = "./darknet_cfg/yolov4-tiny.weights"
 
 network, class_names, colors = darknet.load_network(CONFIG, DATA, WEIGHTS)
 darknet_width = darknet.network_width(network)
