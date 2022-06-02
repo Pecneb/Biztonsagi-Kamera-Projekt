@@ -61,7 +61,7 @@ def detections2cvimg(image):
     # Draw bboxes on frame
     image_to_return = darknet.draw_boxes(detections_adjusted, image, colors)
     # Print detections and their confidence percentage
-    darknet.print_detections(detections)
+    # darknet.print_detections(detections) # uncomment if you want to print detections
     return image_to_return, detections
 
 def main():

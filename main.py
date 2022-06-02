@@ -2,6 +2,28 @@
 # import os
 import argparse
 from bgsub import bgsub
+import os
+from datetime import date
+
+def setup_dir():
+    '''
+    This function sets up the directory for recording videos of detections.
+    First create detections dir if not already created.
+    Then Created a directory for the current day.
+    So each day gets a directory. And each video that has been recorded is saved under the current day,
+    that has been recorded on.
+    '''
+    try:
+        os.mkdir("detections")
+        print("Creating directory: detections.")        
+    except FileExistsError:
+        print("Directory is already there!")
+
+    try:
+        os.mkdir(os.path.join("detections", date.strftime(date.today(),"%Y-%m-%d")))
+        print("Creating todays directory.")
+    except FileExistsError:
+        print("Directory is already there!")
 
 def main():
     # Using argparser to get command line arguments
@@ -12,6 +34,8 @@ def main():
     parser.add_argument('--algo', help='Choose the background subtraction algorythm MOG2 or KNN', default='MOG2', choices=['KNN', 'MOG2'])
     # use darknet or not
     parser.add_argument('--darknet', help='turn on darknet YOLO object detection and recognition', default=0, choices=['0','1'])
+    # check if user wants video recording
+    parser.add_argument('--record', help="Save detection into video or not. default is 0", default=0, choices=[0, 1], type=int)
     
     # parse args
     args = parser.parse_args()
@@ -22,25 +46,12 @@ def main():
     except ValueError:
         input = args.input
 
-    # call program body
-    bgsub(input, args.algo, int(args.darknet))
+    rec_flag = int(args.record)
+    if(rec_flag):
+        setup_dir()
 
-    # # Use webcam as video source
-    # if args.input == 0:
-    #     # Using KNN algorythm for background subtraction
-    #     if args.algo == 'KNN':
-    #         bgsub(0, 'KNN')
-    #     # Using MOG2 algorythm for background subtraction
-    #     elif args.algo == 'MOG2':
-    #         bgsub(0, 'MOG2')
-    # # Specify video source
-    # elif args.input != 0:
-    #     # Using KNN algorythm for background subtraction
-    #     if args.algo == 'KNN':
-    #         bgsub(args.input, 'KNN')
-    #     # Using MOG2 algorythm for background subtraction
-    #     elif args.algo == 'MOG2':
-    #         bgsub(args.input, 'MOG2')
+    # call program loop 
+    bgsub(input, args.algo, int(args.darknet), rec_flag)
 
 if __name__=="__main__":
     main()
