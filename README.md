@@ -37,15 +37,16 @@ Use ```pip install -r requirements.txt```
 ```
 
 python.exe .\src\main.py --help
-usage: main.py [-h] [--input INPUT] [--algo {KNN,MOG2}]
+usage: main.py [-h] [--input INPUT] [--algo {KNN,MOG2}] [--darknet {0,1}] [--record {0,1}]
 
-Security Camera with motion detection.(quit with 'q')
+Security Camera with motion detection.(quit with 'q', press 'q' to pause and resume)
 
-optional arguments:
-  -h, --help         show this help message and exit
-  --input INPUT      path to the video source (webcam is default).
-  --algo {KNN,MOG2}  Choose the background subtraction algorythm MOG2 or KNN
-
+options:
+-h, --help         show this help message and exit
+--input INPUT      path to the video source (webcam is default).
+--algo {KNN,MOG2}  Choose the background subtraction algorythm MOG2 or KNN
+--darknet {0,1}    turn on darknet YOLO object detection and recognition
+--record {0,1}     Save detection into video or not. default is 0
 ```
 
 ## `main.py`
